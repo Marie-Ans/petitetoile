@@ -1,0 +1,25 @@
+include parts/head.pug
+include parts/header.pug
+if user 
+  - var admin = userInfo.admin==true?'(admin)':''
+  nav(aria-label='breadcrumb')
+    ol.breadcrumb(id=userInfo.pseudo)
+      li.breadcrumb-item.font-weight-bold.gray(id=userInfo.id) #{userInfo.pseudo} 
+        span.adminColor.font-weight-normal #{admin}
+      li.breadcrumb-item.active(aria-current='page') Ma messagerie
+  h2.ml-3.mb-lg-3 Ma messagerie
+  .d-flex.justify-content-center.m-2
+    .works
+      img(src='/img/ill/travaux.png')
+      h3 Ici, bientôt votre messagerie privée : vous pourrez ouvrir des sujets de discussion avec vos amis.
+else
+  div.ml-2
+    h2 Accès non autorisé
+    p Vous devez être connecté pour accéder à votre Petite Toile
+    p
+      a(href='/') > Me connecter
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/emails.js')
+

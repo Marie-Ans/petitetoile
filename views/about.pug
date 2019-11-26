@@ -1,0 +1,17 @@
+include parts/head.pug
+include parts/header.pug
+nav(aria-label='breadcrumb')
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href='/') Accueil
+    li.breadcrumb-item.active(aria-current='page') A propos
+.page
+  h2 A propos de la Petite Toile
+  p Petite Toile entre Amis est un réseau social destiné aux amateurs de cinéma.
+  p Ce réseau social est entièrement gratuit.
+  p Vous ètes libres d'échanger entre membres de ce réseau, veillez toutefois à rester courtois, et ne pas tenir de propos à caractère injurieux. Le cas échéant, l'administrateur du site se réserve le droit de supprimer vos posts, et éventuellement votre profil.
+  p 
+    | Vous pouvez contacter l'administrateur du réseau à l'adresse suivante :
+    a.pinkColor(href='mailto:petitetoile2019@gmail.com')  petitetoile2019@gmail.com
+script(src='/lib/jquery-3.4.1.min.js')
+

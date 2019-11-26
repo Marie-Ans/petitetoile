@@ -1,0 +1,91 @@
+.page-members{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 95%;
+    
+    @include lg {
+        flex-direction: row;
+        //justify-content: space-between;
+    }
+
+    form#filters {
+
+        @include lg {
+            width: 30%
+        }
+
+        .filters {
+            align-items: flex-end;
+            display:flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-height: 800px;
+    
+            @include lg {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+    
+            
+            .filter-group {
+                margin-right: 0.5rem;
+
+                label {
+                    display: block;
+
+                }
+
+                input{
+                    display: inline-block;
+                    max-width: 150px;
+                    max-height: 30px;
+                }
+    
+                // input {
+                //     max-width: 200px;
+                // // }
+            }
+
+            // #clear{   
+            //     background-image: url('/img/action/clear-20.png');     
+            //     background-position: center;
+            //     background-repeat: no-repeat;
+            //     padding:0;
+            //     height: 20px;
+            //     width: 20px;
+
+            //     @include xs {
+            //         height: 30px;
+            //         width: 30px;
+            //     }
+
+            //     &.disabled{   
+            //         background-image: url('/img/action/clear-20-dis.png'); 
+                    
+            //         &:hover {
+            //             cursor: default;
+            //         }
+            //     }
+            // }
+            
+
+            // #search{        
+            //     background-image: url('/img/action/search-20.png');
+            //     background-position: center;
+            //     background-repeat: no-repeat;
+            //     padding:0;
+            //     height: 20px;
+            //     width: 20px;
+
+            //     @include xs {
+            //         height: 30px;
+            //         width: 30px;
+            //     }
+                
+            // }
+        }
+    }
+}
+

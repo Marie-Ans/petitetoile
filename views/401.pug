@@ -1,0 +1,12 @@
+include parts/head.pug
+include parts/header.pug
+if notfriend
+    .d-flex.flex-column.align-items-center.m-2.mt-2.mt-sm-3.mt-md-4.mt-lg-5
+        h3 Vous pouvez accéder à la Petite Toile d'un membre que s'il est votre ami :
+        h3
+            a(href='/amis')  Retour à Mes Amis
+else 
+    .d-flex.flex-column.align-items-center.m-2.mt-2.mt-sm-3.mt-md-4.mt-lg-5
+        h3 Vous devez être authentifié pour accéder à cette page :
+        h3
+            a(href='/')  Connectez-vous

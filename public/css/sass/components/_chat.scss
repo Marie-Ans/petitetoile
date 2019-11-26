@@ -1,0 +1,194 @@
+.contenairChat {
+    border:1px solid #b9b5b9;
+    display:flex;
+    justify-content: start;
+    margin: auto;
+    width: 95%;
+
+
+    .list {
+        height: 100%;
+        width: 100%;
+    
+        @include md {
+            overflow-y: scroll;
+            width: 350px;
+        }
+    }
+
+    .listSelected{
+        display:none;
+    
+        @include md {
+            display:block;
+        }
+    }
+
+    .itemFriend{
+        align-items: center;
+        border-bottom: 1px solid #dad7da;
+        cursor: pointer;
+        display:flex;
+        justify-content: space-between;
+        padding: 10px 0px;
+    
+        .infoFriend{
+            align-items: center;
+            display:flex;
+            padding:0 5px;
+            
+            p{
+                margin:0;
+
+                @include lg {
+                    font-size:16px;
+                }
+
+            }
+        }
+    }
+
+    .currentChat {
+        background-color:  rgb(75, 74, 74);
+        color:#fff;
+    }
+    
+    .itemFriend:last-child{
+        border-bottom: none;
+    }
+    
+    .displaying{
+        background-color: #f4f7f5;
+        display: none;
+        width:100%;
+        
+    
+        @include md {
+            display: flex;
+            flex-direction: column;
+        }
+
+        p {
+            font-size: 0.9rem;
+            margin:0;
+
+            @include md {
+                font-size: initial;   
+            }
+        }
+    }
+    
+    .displayingSelected{
+        display:flex;
+        flex-direction: column;
+    
+        @include md {
+            display:flex;
+            flex-direction: column;
+        }
+    }
+
+    .displayingHeader {
+        background-color:#dcd2dd;
+        flex-basis: 8%;
+        display:flex;
+        align-items: center;
+
+        .backList{
+            @include md {
+                display: none;
+            }
+        }
+
+        p {
+            font-weight: bold;
+            margin-left:4px;
+        }
+    }
+
+    
+    .messages{
+        flex-basis: 80%;
+        justify-content: flex-start;
+        padding: 0 10px;
+        overflow-y: scroll;
+
+        .message {
+            display:flex;
+            width: 100%;
+    
+            .messageContent {
+                background-color: #fff;
+                border:1px solid black;
+                border-radius: 5px;
+                margin-top:15px;
+                margin-bottom:10px;
+                padding:5px 10px;
+                width: 80%;
+
+                @include md {
+                    width:60%;
+                }
+    
+                p:last-child{
+                    font-size:0.8rem;
+                    font-style:italic;
+                    margin-top: 5px;
+                    text-align:right;
+                }
+            }      
+        }
+    
+        .messageYou {
+            justify-content: flex-start;
+        }
+    
+        .messageOther {
+            justify-content: flex-end;
+            
+            .messageContent{
+                background-color:  rgb(75, 74, 74);
+                color: #fff;
+            }
+        }
+    
+    }
+    
+    .saisie{
+        flex-basis: 8%;
+        flex-grow: 1;
+        background-color:#dcd2dd;
+        display: flex;
+        justify-content: center;
+        padding: 5px;
+        height: 30px;
+        width: 100%;
+    }
+    
+    #inputM{
+        border-radius:4px;
+        margin-right: 3px;
+        width: 80%;
+    }
+    
+    .saisie button.btn {
+        width: 80px;
+    }
+
+    .saisie button.btn.disabled {
+        background-color: #6c757d;
+        color: #212529;
+        cursor:default;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+

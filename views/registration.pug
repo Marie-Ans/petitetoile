@@ -1,0 +1,131 @@
+include parts/head.pug
+include parts/header.pug
+nav(aria-label='breadcrumb')
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href='/') Accueil
+    li.breadcrumb-item.active(aria-current='page') Inscription
+.page
+  if user 
+    h2 Accès non autorisé
+    p
+      | Vous &egrave;tes deja connect&eacute; en tant que 
+      b #{dataUser.pseudo}
+    p
+      a(href='publications') > Accéder à ma petite toile
+    p
+      a(href='deconnexion') > Me déconnecter
+  else 
+    h2 Inscription
+    p.textInfo Inscription gratuite. Pour le détail des conditions d'utilisation, veuillez consulter notre page 
+      a(href='/about') A Propos
+    label
+        span.red *
+        | Champs obligatoires
+    if msg
+      div(class=''+msg.class role='alert') #{msg.text}
+    form.shadow-lg.p-3.mb-2.bg-white.rounded(action='' method='POST')
+      legend Identification
+      .form-group
+        label(for='pseudo')
+          span.red *
+          | Pseudo :
+        input#pseudo.form-control(type='text' name='pseudo' placeholder='3 à 12 caractères'  aria-describedby='userIdMsg' value=pseudo)
+        small#pseudoMsg.form-text.text-muted Information requise
+      .form-group
+        label(for='pwd')
+          span.red *
+          | Mot de passe :
+        input#pwd.form-control(type='password' name='pwd' placeholder='8 à 12 caractères dont un chiffre' aria-describedby='pwdMsg')
+        small#pwdMsg.form-text.text-muted Information requise
+      .form-group
+        label(for='email')
+          span.red *
+          | Email :
+        input#email.form-control(type='text' name='email' aria-describedby='emailMsg' value=email)
+        small#emailMsg.form-text.text-muted Information requise
+      legend Votre identité
+      .form-group
+        label(for='lname')
+          span.red *
+          | Nom :
+        input#lname.form-control(type='text' name='lname' aria-describedby='lnameMsg' value=lname)
+        small#lnameMsg.form-text.text-muted Information requise
+      .form-group
+        label(for='fname')
+          span.red *
+          | Prénom :
+        input#fname.form-control(type='text' name='fname' aria-describedby='fnameMsg' value=fname)
+        small#fnameMsg.form-text.text-muted Information requise
+      .form-group
+        label(for='birthday')
+          span.red *
+          | Date de naissance :
+        input#birthday.form-control(type='date' name='birthday'  min='1900-01-01' max='2004-12-31' aria-describedby='bdayMsg' value=birthday)
+        small#birthdayMsg.form-text.text-muted Information requise
+      .form-group
+        label(for='gender')
+          span.red *
+          | Genre :
+        small#genderMsg.form-text.text-muted Information requise
+        div#gender
+          - for (type in gender)
+            -var id=type
+            -var value=type
+            -var checked=gender[type][1]
+              .form-check.form-check-inline
+                if checked
+                  input.form-check-input(id=id type='radio' name='gender' value=value checked)
+                else
+                  input.form-check-input(id=id type='radio' name='gender' value=value)
+                label(for=id) #{gender[type][0]}
+      legend Vos hobbies cinématographiques
+      p.textInfo
+        | Vous pourrez compléter les informations suivantes après la création de votre compte.
+      label Genre : 
+      .d-flex.flex-wrap.mb-3
+        - for (genderMovie in gendersMovie)
+          -var id=genderMovie
+          -var value=genderMovie
+          -var checked=gendersMovie[genderMovie][1]
+            .form-check
+              input.form-check-input(id=id type='checkbox' name='gendersMovie' value=value checked=checked)
+              label.form-check-label(for=id) #{gendersMovie[genderMovie][0]}
+      label Provenance : 
+      .d-flex.flex-wrap.mb-3
+        - for (originMovie in originsMovie)
+          -var id=originMovie
+          -var value=originMovie
+          -var checked=originsMovie[originMovie][1]
+            .form-check
+              input.form-check-input(id=id type='checkbox' name='originsMovie' value=value checked=checked)
+              label.form-check-label(for=id) #{originsMovie[originMovie][0]} 
+      label Type de distribution : 
+      .d-flex.flex-wrap.mb-3
+        - for (distribution in distributions)
+          -var id=distribution
+          -var value=distribution
+          -var checked=distributions[distribution][1]
+            .form-check
+              input.form-check-input(id=id type='checkbox' name='distributions' value=value checked=checked)
+              label.form-check-label(for=id) #{distributions[distribution][0]} 
+      label Epoque : 
+      .d-flex.flex-wrap.mb-3
+        - for (time in times)
+          -var id=time
+          -var value=time
+          -var checked=times[time][1]
+            .form-check
+              input.form-check-input(id=id type='checkbox' name='times' value=value checked=checked)
+              label.form-check-label(for=id) #{times[time][0]}
+      .form-group
+        label(for='synopsis') Ce que vous recherchez sur la Petite Toile :
+        textarea#synopsis.form-control(name='synopsis' maxlength='2500' placeholder='2500 caractères maximum') #{synopsis}
+      input.btn(type='submit' value='Envoyer')
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/lib/bootstrap/js/bootstrap.bundle.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/utils/forms.js')
+script(src='/js/registration.js')
+

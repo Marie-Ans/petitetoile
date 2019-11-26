@@ -1,0 +1,279 @@
+include parts/head.pug
+include parts/header.pug
+if user 
+  - var admin = userInfo.admin==true?'(admin)':''
+  - var avatar = userInfo.avatar
+  - var adminFriend = friend.admin==true?'(admin)':''
+  nav(aria-label='breadcrumb')
+    ol.breadcrumb(id=userInfo.pseudo)
+      li.breadcrumb-item.gray(id=userInfo.admin?'admin':'')
+        a(href="/publications") #{userInfo.pseudo} #{admin}
+      li.breadcrumb-item.gray
+        a(href="/amis") Mes amis
+      li.breadcrumb-item.active.gray(id=friend.pseudo aria-current='page') #{friend.pseudo} #{adminFriend}
+  h2.ml-3.mb-lg-3
+    if friend.inline
+      .inline.d-inline-block
+    else 
+      .offline.d-inline-block
+    | #{friend.fname} #{friend.lname} alias 
+    b #{friend.pseudo}
+    span  #{adminFriend}
+  if msg
+    div(class=''+msg.class role='alert') #{msg.text}
+  .page.page-friends(id=userInfo.id)
+    nav.navbar.navbar-expand-md.navbar-light.bg-light.nav-tabs
+      button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          if tab == 'publis'
+            li#tabPublis.nav-item.active
+              a.nav-link
+                | Publications
+                span.sr-only (current)
+          else 
+             li#tabPublis.nav-item
+                a.nav-link.pinkColor(href='/ami?p='+friend.pseudo)
+                  | Publications
+          if tab == 'profile'
+            li#tabProfile.nav-item.active
+              a.nav-link
+                | Profil
+                span.sr-only (current)
+          else 
+            li#tabProfile.nav-item
+              a.nav-link.pinkColor(href='/ami/profil?p='+friend.pseudo)
+                | Profil
+          if tab == 'amis'
+            li#tabAmis.nav-item.active
+              a.nav-link
+                | Amis
+                span.sr-only (current)
+          else 
+            li#tabAmis.nav-item
+              a.nav-link.pinkColor(href='/ami/amis?p='+friend.pseudo)
+                | Amis
+    if tab == 'publis'
+      .page-publi(id=avatar)
+        h3#nbPublis.ml-2.mt-1 Publications : #{nbPublis}
+        form(action='' method='POST')
+          input.d-none(type='text' name='friend' value=friend.pseudo)
+          .editor.mt-lg-3
+            textarea#newPubli.form-control.moving(name='newPubli' maxlength='2000' placeholder='Quoi de neuf aujourd\'hui? (2000 car. max)')
+            .form-group.removable
+              .d-flex.mt-1.justify-content-end.flex-wrap
+                button.btn.btn-img.cancel(type='button' data-toggle='tooltip' data-placement='top' title='Abandonner la saisie' value='')
+                button.btn.btn-img.validate(type='submit' data-toggle='tooltip' data-placement='top' title='Publier' value='')
+        .publis
+          each publi in publis
+            - var adminWriter = publi.writerAdmin==true?'(admin)':''
+            - var avatarWriter = '/img/avatars/'+publi.writerAvatar;
+            div(id=publi._id class="publi")
+              .d-flex
+                img(src=avatarWriter alt='avatar')
+                div
+                  .d-flex.flex-wrap
+                    p.font-weight-bold.mr-1.mb-0 #{publi.writerPseudo}
+                      span.font-weight-normal  #{adminWriter}
+                    P.font-italic.mb-0 le #{publi.formattedDate} 
+                  p.black.mt-2 #{publi.content}
+              .publiFooter
+                -var nbcomments = publi.comments.length
+                  p.d-flex.justify-content-start.align-items-center
+                    span #{publi.likes}
+                    input.btn.like(type='button' data-toggle='tooltip' data-placement='top' title='J\'aime' value='')
+                  p
+                    span #{nbcomments} commentaires
+                    span.showComments.ml-1 Commenter
+                  if userInfo.admin == true || publi.writerPseudo == userInfo.pseudo
+                    p
+                      a.nav-link.pinkColor.pl-0.deletePubli(href='#') Supprimer
+                  else 
+                    p
+                      a.nav-link.pinkColor.pl-0.text-white Supprimer
+              div.comments.removable
+                form
+                  .editor.mt-lg-3.mb-3
+                    textarea.form-control.moving(name='comment' maxlength='2000' placeholder='Commentez la publication (2000 car. max)')
+                    .form-group.removable
+                      .d-flex.mt-1.justify-content-end.flex-wrap
+                        button.btn.btn-img.cancel(type='button' data-toggle='tooltip' data-placement='top' title='Abandonner la saisie' value='')
+                        button.btn.btn-img.validate.validateComment(type='button' data-toggle='tooltip' data-placement='top' title='Publier le commentaire' value='')
+                each comment in publi.comments
+                  .publi
+                    - var adminComment = comment.writerAdmin==true?'(admin)':''
+                    - var avatarComment = '/img/avatars/'+comment.writerAvatar
+                    .d-flex
+                      img(src=avatarComment alt='avatar')
+                      div
+                        .d-flex.flex-wrap
+                          p.font-weight-bold.mr-1.mb-0 #{comment.writerPseudo} 
+                            span.font-weight-normal  #{adminComment}
+                          P.font-italic.mb-0 le #{comment.formattedDate} 
+                        p.black.mt-2 #{comment.content}
+    if tab == 'profile'
+      - var avatar =  '/img/avatars/'+friend.avatar
+      .d-flex.justify-content-between
+        h3.ml-2.mt-1 Profil
+        div.m-2
+          img.avatar(src=avatar alt='avatar')
+      form.shadow-lg.p-3.mb-2.bg-white.rounded
+        legend Identité
+        -var statutLabel=friend.admin==true?'Administrateur':'Membre'
+        -var friendStAdmin=friend.admin
+        -var friendStMember=!friend.admin
+        if userInfo.admin==true
+          .infoProfile.d-flex.justify-content-between.flex-wrap
+            div
+              label#labelStatut Statut
+              span.ml-2 #{statutLabel}
+            input#modifyStatut.btn.ml-2(type='button' value='Modifier le statut' data-toggle='modal' data-target='#modStatutModal')
+            #modStatutModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='modStatutModalTitle' aria-hidden='true')
+              .modal-dialog(role='document')
+                .modal-content
+                  .modal-header
+                    h5#modStatutModal.modal-title Modifier le statut
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                      span(aria-hidden='true') &times;
+                  .modal-body
+                    div.d-flex.align-items-start
+                      input#mem.mr-1(type='radio' name='statut' value='mem' checked=friendStMember)
+                      label(for='mem') Membre
+                    div.d-flex.align-items-center
+                      input#adm.mr-1(type='radio' name='statut' value='adm' checked=friendStAdmin)
+                      label(for='adm') Administrateur
+                  .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Annuler
+                    button.btn.btn-primary.validChangeStatut(type='button') Valider
+        else 
+          .infoProfile
+            label#labelStatut Statut
+            span.ml-2 #{statutLabel}
+        .infoProfile
+          label#labelPseudo Pseudo : 
+          span.ml-2 #{friend.pseudo}
+        .infoProfile
+          label Email : 
+          span.ml-2 #{friend.email}
+        .infoProfile
+          label Nom : 
+          span.ml-2 #{friend.lname}
+        .infoProfile
+          label Prénom : 
+          span.ml-2 #{friend.fname}
+        .infoProfile
+          label Date de naissance : 
+          span.ml-2 #{friend.birthday}
+        .infoProfile
+          label Genre : 
+          - for (type in friend.gender)
+            if friend.gender[type][1]
+              span.ml-2 #{friend.gender[type][0]}
+        legend Ses hobbies cinématographiques
+        label Genre : 
+        .infoProfile
+          .d-flex.flex-wrap.mb-3
+            - for (genderMovie in friend.gendersMovie)
+              -var id=genderMovie
+              -var value=genderMovie
+              -var checked=friend.gendersMovie[genderMovie][1]
+                .form-check
+                  input.form-check-input(id=id type='checkbox' name='gendersMovie' value=value checked=checked disabled)
+                  label.form-check-label(for=id) #{friend.gendersMovie[genderMovie][0]}
+        label Provenance : 
+        .infoProfile
+          .d-flex.flex-wrap.mb-3
+            - for (originMovie in friend.originsMovie)
+              -var id=originMovie
+              -var value=originMovie
+              -var checked=friend.originsMovie[originMovie][1]
+                .form-check
+                  input.form-check-input(id=id type='checkbox' name='originsMovie' value=value checked=checked disabled)
+                  label.form-check-label(for=id) #{friend.originsMovie[originMovie][0]}
+        label Type de distribution : 
+        .infoProfile
+          .d-flex.flex-wrap.mb-3
+            - for (distribution in friend.distributions)
+              -var id=distribution
+              -var value=distribution
+              -var checked=friend.distributions[distribution][1]
+                .form-check
+                  input.form-check-input(id=id type='checkbox' name='distributions' value=value checked=checked disabled)
+                  label.form-check-label(for=id) #{friend.distributions[distribution][0]}
+        label Epoque : 
+        .infoProfile
+          .d-flex.flex-wrap.mb-3
+            - for (time in friend.times)
+              -var id=time
+              -var value=time
+              -var checked=friend.times[time][1]
+                .form-check
+                  input.form-check-input(id=id type='checkbox' name='times' value=value checked=checked disabled)
+                  label.form-check-label(for=id) #{friend.times[time][0]}
+        .infoProfile
+          label Ce qu'il/elle recherche sur la Petite Toile : 
+          p #{friend.synopsis}
+    if tab == 'amis'
+      h3#nbFriends.ml-2.mt-1 Amis : #{nbFriends}
+      .friends
+        if friends
+          .membersContainer
+            each fFriend in friends
+              - var fFriendAdmin = fFriend.admin==true?'(admin)':''
+              - var fFriendAvatar = '/img/avatars/'+fFriend.avatar
+              .member.shadow.rounded(id=fFriend._id)
+                .infoMember(id=fFriend.pseudo)
+                  img(src=fFriendAvatar alt='avatar')
+                  if fFriend.inline
+                    .inline.mt-1.mt-lg-2.ml-1
+                  else 
+                    .offline.mt-1.mt-lg-2.ml-1
+                  .flex-grow-1
+                      if userInfo.pseudo == fFriend.pseudo
+                        a.font-weight-bold(href='/publications' title='Voir ma petite Toile') #{fFriend.fname} #{fFriend.lname}
+                      else if userInfo.admin == true || fFriend.friend == true
+                          a.font-weight-bold(href='/ami?p='+fFriend.pseudo title='Voir la Petite Toile de '+fFriend.pseudo) #{fFriend.fname} #{fFriend.lname}
+                      else
+                        p.font-weight-bold.mr-1.mb-0 #{fFriend.fname} #{fFriend.lname}
+                      p.font-italic.mb-0 #{fFriend.pseudo} 
+                      p.font-italic.mb-0  #{fFriendAdmin} 
+                .metaMember
+                  .metaActions
+                    .btn-group(role='group')
+                      button#btnGroupDrop1.btn.btn-secondary.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                        | Actions
+                      .dropdown-menu(aria-labelledby='btnGroupDrop1')
+                        if userInfo.pseudo == fFriend.pseudo
+                          p.dropdown-item.seePubli Voir ma Petite Toile
+                        else if userInfo.admin == true || fFriend.friend == true
+                          p.dropdown-item.seeWeb Voir la Petite Toile
+                        else 
+                          p.dropdown-item.gray Voir la Petite Toile
+                        if fFriend.linked == true || userInfo.pseudo == fFriend.pseudo
+                          p.dropdown-item.gray Inviter dans mon réseau
+                        else 
+                          p.dropdown-item.inviteWeb Inviter dans mon réseau
+                        if userInfo.admin == true
+                          p.dropdown-item.deleteRelation Supprimer la relation
+                  .metaInfo
+                    if fFriend.friend
+                      a.font-italic(href='/ami?p='+fFriend.pseudo title='Voir la Petite Toile de '+fFriend.pseudo) Ami
+                    if fFriend.guest
+                      a.font-italic(href='/amis/invitations' title='Voir les invitations') Invité par vous
+                    if fFriend.host
+                      a.font-italic(href='/amis/demandes' title='Voir les demandes d\'ajout') Vous a invité
+                    if fFriend.recom
+                      a.font-italic(href='/amis/recommandations' title='Voir les recommandations') Vous a été recommandé
+else
+  div.ml-2
+    h2 Accès non autorisé
+    p Vous devez être connecté pour accéder à votre Petite Toile
+    p
+      a(href='/') > Me connecter
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/lib/bootstrap/js/bootstrap.bundle.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/friend.js')
+

@@ -1,0 +1,24 @@
+{
+  "name": "petitetoile",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "formidable": "^1.2.1",
+    "mongodb": "^3.3.2",
+    "nodemailer": "^6.3.0",
+    "password-hash": "^1.2.2",
+    "path": "^0.12.7",
+    "pug": "^2.0.4",
+    "socket.io": "^2.2.0"
+  }
+}

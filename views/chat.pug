@@ -1,0 +1,86 @@
+include parts/head.pug
+include parts/header.pug
+if user 
+  - var admin = userInfo.admin==true?'(admin)':''
+  nav(aria-label='breadcrumb')
+    ol.breadcrumb(id=userInfo.pseudo)
+      li.breadcrumb-item.font-weight-bold.gray(id=userInfo.id) #{userInfo.pseudo} 
+        span.adminColor.font-weight-normal #{admin}
+      li.breadcrumb-item.active(aria-current='page') Mes discussions
+  h2.ml-3.mb-lg-3 Mes discussions
+  if msg
+    div(class=''+msg.class role='alert') #{msg.text}
+  .contenairChat.shadow.rounded
+    .list(class=listSelected)
+      if friends.length!=0
+        each friend in friends
+          - var adminFriend = friend.admin==true?'(admin)':''
+          if friend.pseudo == datas.selectedFriend
+            .itemFriend.currentChat(id=friend.pseudo)
+              .infoFriend
+                if friend.inline
+                  .inline
+                else
+                  .offline
+                p.font-weight-bold
+                  span #{friend.pseudo} 
+                  span.font-weight-normal #{adminFriend}
+              if friend.newMessages!=0
+                .indicator #{friend.newMessages}
+          else 
+            .itemFriend(id=friend.pseudo)
+              .infoFriend
+                if friend.inline
+                  .inline
+                else
+                  .offline
+                p.font-weight-bold 
+                  span #{friend.pseudo} 
+                  span.font-weight-normal #{adminFriend}
+              if friend.newMessages!=0
+                .indicator #{friend.newMessages}
+      else 
+          p.m-2.font-weight-bold Vous n'avez pas encore d'amis avec qui discuter  
+    .displaying(class=displayingSelected)
+      if selectedFriend
+        .displayingHeader
+          button.btn.backList RETOUR
+          p 
+            | Discussion avec
+            a.pinkColor(href='/ami?p='+selectedFriend title='Voir la Petite Toile de '+selectedFriend)  #{selectedFriend} 
+        .messages
+          each message in messages
+            if message.sender == selectedFriend
+              .message.messageOther
+                .messageContent
+                  p #{message.message}
+                  p #{message.formatDateTime}
+            else 
+              .message.messageYou
+                .messageContent
+                  p #{message.message}
+                  p #{message.formatDateTime}
+        .saisie
+          input.d-none(id=selectedFriend)
+          input#inputM(type='text' name='message')
+          button.btn Envoyer
+      else 
+        .displayingHeader
+          button.btn.backList RETOUR
+          p Choisissez un ami pour discuter
+        .messages
+        .saisie
+          input.d-none(id='')
+          input#inputM(type='text' name='message')
+          button.btn.disabled Envoyer
+else
+  div.ml-2
+    h2 Accès non autorisé
+    p Vous devez être connecté pour accéder à votre Petite Toile
+    p
+      a(href='/') > Me connecter
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/chat.js')
+

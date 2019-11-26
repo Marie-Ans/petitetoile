@@ -1,0 +1,116 @@
+include parts/head.pug
+include parts/header.pug
+if user 
+  - var admin = userInfo.admin==true?'(admin)':''
+  nav(aria-label='breadcrumb')
+    ol.breadcrumb(id=userInfo.pseudo)
+      li.breadcrumb-item.font-weight-bold.gray(id=userInfo.id) #{userInfo.pseudo} 
+        span.adminColor.font-weight-normal #{admin}
+      li.breadcrumb-item.active(aria-current='page') Tous les membres
+  h2.ml-3.mb-lg-3 Tous les membres
+  if msg
+      div(class=''+msg.class role='alert') #{msg.text}
+  .page-members
+    form#filters(action='' method='POST')
+      .filters.mb-3
+        .filter-group
+          label(for='lname') Nom :
+          .d-flex.flex-nowrap.align-items-center
+            input#lname.form-control(type='text' name='lname' aria-describedby='lnameMsg' value=filters.lname)
+        .filter-group
+          label(for='fname') Prénom :
+          .d-flex.flex-nowrap.align-items-center
+            input#fname.form-control(type='text' name='fname' aria-describedby='fnameMsg' value=filters.fname)
+        .filter-group
+          label(for='pseudo') Pseudo :
+          .d-flex.flex-nowrap.align-items-center
+            input#pseudo.form-control(type='text' name='pseudo' aria-describedby='lnameMsg' value=filters.pseudo)
+        .d-flex.mt-2
+          if filters.filtering
+            button#search.btn.btn-img.search(type='submit' data-toggle='tooltip' data-placement='top' title='Rechercher les membres')
+            button#clear.btn.btn-img.clear(type='button' data-toggle='tooltip' data-placement='top' title='Effacer les filtres')
+          else
+            button#search.btn.btn-img.search(type='submit' data-toggle='tooltip' data-placement='top' title='Rechercher les membres')
+            button#clear.btn.btn-img.clear.disabled(type='button')
+    .ml-lg-3
+      - var nbMembers = members.length
+        if filters.filtering
+          h3 Résultats de la recherche : #{nbMembers} membres
+        else
+          h3 #{nbMembers} membres
+        .membersContainer
+          each member in members
+            - var modalId = member.pseudo+'Modal'
+            - var adminMember = member.admin==true?'(admin)':''
+            - var avatarMember = '/img/avatars/'+member.avatar;
+            .member.shadow.rounded(id=member._id)
+              .infoMember(id=member.pseudo)
+                img(src=avatarMember alt='avatar')
+                if member.inline
+                  .inline.mt-1.mt-lg-2.ml-1
+                else 
+                  .offline.mt-1.mt-lg-2.ml-1
+                .flex-grow-1
+                  if userInfo.pseudo == member.pseudo
+                    a.font-weight-bold(href='/publications' title='Voir ma petite Toile') #{member.fname} #{member.lname}
+                  else if userInfo.admin == true || member.friend == true
+                    a.font-weight-bold(href='/ami?p='+member.pseudo title='Voir la Petite Toile de '+member.pseudo) #{member.fname} #{member.lname}
+                  else 
+                    p.font-weight-bold.mr-1.mb-0 #{member.fname} #{member.lname}
+                  p.font-italic.mb-0 #{member.pseudo}
+                  p.font-italic.mb-0 #{adminMember}
+              .metaMember
+                .metaActions
+                  .btn-group(role='group')
+                    button#btnGroupDrop1.btn.btn-secondary.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                      | Actions
+                    .dropdown-menu(aria-labelledby='btnGroupDrop1')
+                      if userInfo.pseudo == member.pseudo
+                        p.dropdown-item.seePubli Voir ma Petite Toile
+                      else if userInfo.admin == true || member.friend == true
+                        p.dropdown-item.seeWeb Voir la Petite Toile
+                      else 
+                        p.dropdown-item.gray Voir la Petite Toile
+                      if member.linked == true || userInfo.pseudo == member.pseudo
+                        p.dropdown-item.gray Inviter dans mon réseau
+                      else 
+                        p.dropdown-item.inviteWeb Inviter dans mon réseau
+                      if userInfo.admin == true
+                        p.dropdown-item(data-toggle="modal" data-target='#'+modalId) Supprimer le membre
+                .metaInfo
+                  if member.friend
+                    a.font-italic(href='/ami?p='+member.pseudo title='Voir la Petite Toile de '+member.pseudo) Ami
+                  if member.guest
+                    a.font-italic(href='/amis/invitations' title='Voir les invitations') Invité par vous
+                  if member.host
+                    a.font-italic(href='/amis/demandes' title='Voir les demandes d\'ajout') Vous a invité
+                  if member.recom
+                    a.font-italic(href='/amis/recommandations' title='Voir les recommandations') Vous a été recommandé
+                .modal.fade(id=modalId tabindex='-1' role='dialog' aria-labelledby='deleteModalTitle' aria-hidden='true')
+                  .modal-dialog.modal-dialog-scrollable(role='document')
+                    .modal-content
+                      .modal-header
+                        h5#deleteModalTitle.modal-title.red Supprimer un membre
+                        button.close(type='button' data-dismiss='modal' aria-label='Close')
+                          span(aria-hidden='true') &times;
+                      .modal-body
+                        p(id=member._id) 
+                          | Etes vous sûr de vouloir supprimer 
+                          span(id=member.pseudo).font-weight-bold #{member.pseudo} 
+                          | du reseau Petite Toile Entre Amis ?
+                        
+                      .modal-footer
+                        button.btn(type='button' data-dismiss='modal') Annuler
+                        button.deleteBtn.btn(type='button' data-dismiss='modal') Supprimer
+else
+  div.ml-2
+    h2 Accès non autorisé
+    p Vous devez être connecté pour accéder à votre Petite Toile
+    p
+      a(href='/') > Me connecter
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/lib/bootstrap/js/bootstrap.bundle.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/members.js')
+

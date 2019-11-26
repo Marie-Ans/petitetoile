@@ -1,0 +1,74 @@
+include parts/head.pug
+include parts/header.pug
+if user 
+  - var admin = userInfo.admin==true?'(admin)':''
+  - var avatar = userInfo.avatar
+  nav(aria-label='breadcrumb')
+    ol.breadcrumb(id=userInfo.pseudo)
+      li.breadcrumb-item.font-weight-bold.gray(id=userInfo.admin?'admin':'') #{userInfo.pseudo} 
+        span.adminColor.font-weight-normal #{admin}
+      li.breadcrumb-item.active(aria-current='page') Publications
+  .page.shadow.rounded.page-publi(id=avatar)
+    h2 Mes publications
+    if msg
+      div(class=''+msg.class role='alert') #{msg.text}
+    form(action='' method='POST')
+      .editor.mt-lg-3
+        textarea#newPubli.form-control.moving(name='newPubli' maxlength='2000' placeholder='Quoi de neuf aujourd\'hui? (2000 car. max)')
+        .form-group.removable
+          .d-flex.mt-1.justify-content-end.flex-wrap
+            button.btn.btn-img.cancel(type='button' data-toggle='tooltip' data-placement='top' title='Abandonner la saisie' value='')
+            button.btn.btn-img.validate(type='submit' data-toggle='tooltip' data-placement='top' title='Publier' value='')
+    .publis
+      each publi in publis
+        - var adminWriter = publi.writerAdmin==true?'(admin)':''
+        - var avatarWriter = '/img/avatars/'+publi.writerAvatar;
+        div(id=publi._id class="publi")
+          .d-flex
+            img(src=avatarWriter alt='avatar')
+            div
+              .d-flex.flex-wrap
+                p.font-weight-bold.mr-1.mb-0 #{publi.writerPseudo} 
+                  span.adminColor.font-weight-normal #{adminWriter}
+                P.font-italic.mb-0 le #{publi.formattedDate} 
+              p.black.mt-2 #{publi.content}
+          .publiFooter
+            -var nbcomments = publi.comments.length
+              p.d-flex.justify-content-start.align-items-center
+                span #{publi.likes}
+                button.btn.like(type='button' data-toggle='tooltip' data-placement='top' title='J\'aime' value='')
+              p
+                span #{nbcomments} commentaire(s)
+                span.showComments.ml-1 Commenter
+              if userInfo.admin == true || publi.writerPseudo == userInfo.pseudo
+                p
+                  a.nav-link.pinkColor.pl-0.deletePubli(href='#') Supprimer
+              else 
+                p
+                  a.nav-link.pinkColor.pl-0.text-white Supprimer
+          div.comments.removable
+            form
+              .editor.mt-lg-3.mb-3
+                textarea.form-control.moving(name='comment' maxlength='2000' placeholder='Commentez la publication (2000 car. max)')
+                .form-group.removable
+                  .d-flex.mt-1.justify-content-end.flex-wrap
+                    button.btn.btn-img.cancel(type='button' data-toggle='tooltip' data-placement='top' title='Abandonner la saisie' value='')
+                    button.btn.btn-img.validate.validateComment(type='button' data-toggle='tooltip' data-placement='top' title='Publier le commentaire' value='')
+            each comment in publi.comments
+              - var adminComment = comment.writerAdmin==true?'(admin)':''
+              - var avatarComment = '/img/avatars/'+comment.writerAvatar
+              .publi(id=comment._id)
+                .d-flex
+                  img(src=avatarComment alt='avatar')
+                  div
+                    .d-flex.flex-wrap
+                      p.font-weight-bold.mr-1.mb-0 #{comment.writerPseudo}
+                        span.adminColor.font-weight-normal  #{adminComment}
+                      p.font-italic.mb-0 le #{comment.formattedDate} 
+                    p.black.mt-2 #{comment.content}
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/utils/forms.js')
+script(src='/js/publications.js')
+

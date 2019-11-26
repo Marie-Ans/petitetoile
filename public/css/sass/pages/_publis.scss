@@ -1,0 +1,123 @@
+.page-publi {
+    background-color: #f0f0f0;
+    padding-bottom: 5px;
+}
+
+.editor {
+    margin: auto;
+    margin-top:0px;
+    width: 100%;
+
+    @include sm {
+        margin-top:5px;
+        width: 80%;
+    }
+
+    @include md {
+        margin-top: 10px;
+        width: 75%;
+    }
+
+    @include lg {
+        width: 70%;
+    }
+    
+}
+
+.publis {
+    margin: 0px;
+
+    @include sm {
+        margin: 5px;
+    }
+
+    @include md {
+        margin: 10px;
+
+    }
+
+    @include lg {
+        margin: 15px;
+
+    }
+}
+
+.publi {
+    background-color: #fff;
+    border: 1px solid #dcd2dd;
+    border-radius: 3px;
+    color: rgb(61, 59, 59);
+    margin: 5px;
+    margin-bottom: 30px;
+    padding: 5px;
+
+    img {
+        display: none;
+
+        @include xs {
+            display: block;
+            margin-right: 10px;
+            width: 30px;
+            height: 30px;
+        }
+
+        @include sm {
+            width: 40px;
+            height: 40px;
+        }
+
+
+        @include md {
+            width: 50px;
+            height: 50px;
+        }
+
+        @include lg {
+            width: 60px;
+            height: 60px;
+        }
+    }
+
+    .publiFooter {
+        border-top: 1px solid #dcd2dd;
+        clear: both;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+
+        p{
+            margin: 0px;
+        }
+    }
+
+    .showComments {
+        color: #e31231;
+        cursor: pointer; 
+      
+        &:hover {
+          text-decoration: underline;
+          color: #5d525e;
+        }
+    }
+
+    .comments {
+        padding: 10px 10px;
+
+        @include sm {
+            padding: 10px 20px;
+        }
+    
+        @include md {
+            padding: 10px 30px;
+    
+        }
+    
+        @include lg {
+            padding: 10px 30px;
+    
+        }
+
+    }
+
+}

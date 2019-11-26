@@ -1,0 +1,76 @@
+.membersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    .member {
+        background-color: #fff;
+        //display: flex;
+        margin-bottom: 10px;
+        width: 250px;
+
+        @include md {
+            margin-right: 15px;
+        } 
+
+        .infoMember {
+            display: flex;
+
+            img {
+                height: 40px;
+                width: 40px;
+    
+                @include xs {
+                    height: 50px;
+                    width: 50px;
+                } 
+    
+                @include sm {
+                    height: 60px;
+                    width: 60px;
+                } 
+    
+                @include md {
+                    height: 70px;
+                    width: 70px;
+                } 
+    
+                @include lg {
+                    height: 80px;
+                    width: 80px;
+                } 
+            }
+        }
+
+        .metaMember {
+            align-items: center;
+            display: flex;
+            //flex-direction: column;
+            justify-content: space-between;
+            padding: 5px;
+            padding-left: 0px;
+
+            // @include xs {
+            //     flex-direction: row;
+            // } 
+
+
+
+            .metaInfo {
+                a,p{
+                    font-size: 0.7rem;
+                    margin: 0px;
+
+                    @include sm {
+                        font-size: 0.8rem;
+                    } 
+
+                    @include md {
+                        font-size: 0.9rem;
+                    }
+                } 
+            }
+        }
+
+    }
+}

@@ -1,0 +1,237 @@
+include parts/head.pug
+include parts/header.pug
+if user 
+  - var admin = userInfo.admin==true?'(admin)':''
+  - var userId = userInfo.id
+  nav(aria-label='breadcrumb')
+    ol.breadcrumb(id=userInfo.pseudo)
+      li.breadcrumb-item.font-weight-bold.gray(id=userInfo.id) #{userInfo.pseudo} 
+        span.adminColor.font-weight-normal #{admin}
+      li.breadcrumb-item.active(aria-current='page') Profil
+  if msg
+    div(class=''+msg.class role='alert') #{msg.text}
+  .page.shadow.rounded.page-publi
+    .profile-header
+      h2 Mon profil
+      .profile-header-avatar  
+        img.avatar(src=member.avatar alt='avatar')
+        input#chooseAvatar.btn.ml-1(type='button' value='Modifier l\'avatar' data-toggle='modal' data-target='#chAvatar')
+    #chAvatar.modal.fade(tabindex='-1' role='dialog' aria-labelledby='chAvatarModalTitle' aria-hidden='true')
+      .modal-dialog(role='document')
+        form(action='profil/fileupload' method='post' enctype='multipart/form-data')
+          .modal-content
+            .modal-header
+              h5#chAvatarModalTitle.modal-title Modifier mon image d'avatar
+              button.close(type='button' data-dismiss='modal' aria-label='Close')
+                span(aria-hidden='true') &times;
+            .modal-body
+              //- div.d-flex.align-items-center
+              //-   //- input#avatarOptDefault.mr-1(type='radio' name='opt' value='default')
+              //-   //- label.mb-0(for='mem') Pas d'image
+              //- div.d-flex.align-items-center
+              //-   input#avatarOptCustom.mr-1(type='radio' name='opt' value='custom')
+              label.mb-0(for='adm') Je choisis une image
+              #formAvatar.mt-2
+                form(action='profil/fileupload' method='post' enctype='multipart/form-data')
+                  label(for='fileavatar')
+                  input#fileavatar.hide(type='file' name='filetoupload' accept='image/png, image/jpeg')
+                //- if pathAvatar
+                //-   p  #{pathAvatar}
+                //-   img(src=pathAvatar alt='avatar')
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Annuler
+              button#validChangeAvatar.btn.btn-primary(type='submit') Valider
+    label
+      span.red *
+      | Champs obligatoires
+    form.shadow-lg.p-3.mb-2.bg-white.rounded(id='formProfile' action='' method='POST')
+      legend Identification
+      -var statut=member.admin==true?'Administrateur':'Membre'
+      .infoProfile
+        label#labelStatut Statut : 
+        span.ml-2 #{statut}
+      .modifProfile.d-none
+        label#labelStatut Statut : 
+        span.ml-2 #{statut}
+        input.d-none(name='statut' value=true)
+      .infoProfile
+        label#labelPseudo Pseudo : 
+        span.ml-2 #{member.pseudo}
+      .form-group.d-none.modifProfile
+        label#labelStatut Pseudo : 
+        span.ml-2 #{member.pseudo}
+      .infoProfile
+        label Email : 
+        span.ml-2 #{member.email}
+      .form-group.d-none.modifProfile
+        label(for='email')
+          span.red *
+          | Email :
+        input#email.form-control(type='text' name='email' aria-describedby='emailMsg' value=member.email)
+        small#emailMsg.form-text.text-muted Information requise
+      legend Votre identité
+      .infoProfile
+        label Nom : 
+        span.ml-2 #{member.lname}
+      .form-group.d-none.modifProfile
+        label(for='lname')
+          span.red *
+          | Nom :
+        input#lname.form-control(type='text' name='lname' aria-describedby='lnameMsg' value=member.lname)
+        small#lnameMsg.form-text.text-muted Information requise
+      .infoProfile
+        label Prénom : 
+        span.ml-2 #{member.fname}
+      .form-group.d-none.modifProfile
+        label(for='fname')
+          span.red *
+          | Prénom :
+        input#fname.form-control(type='text' name='fname' aria-describedby='fnameMsg' value=member.fname)
+        small#fnameMsg.form-text.text-muted Information requise
+      .infoProfile
+        label Date de naissance : 
+        span.ml-2 #{member.birthday}
+      .form-group.d-none.modifProfile
+        label(for='birthday')
+          span.red *
+          | Date de naissance :
+        input#birthday.form-control(type='date' name='birthday'  min='1900-01-01' max='2004-12-31' aria-describedby='bdayMsg' value=member.birthday)
+        small#birthdayMsg.form-text.text-muted Information requise
+      .infoProfile
+        label Genre : 
+        - for (type in member.gender)
+          if member.gender[type][1]
+            span.ml-2 #{member.gender[type][0]}
+      .form-group.d-none.modifProfile
+        label(for='gender') Genre:
+        div
+          - for (type in member.gender)
+            -var id=type
+            -var value=type
+            -var checked=member.gender[type][1]
+              .form-check.form-check-inline
+                if checked
+                  input.form-check-input(id=id type='radio' name='gender' value=value checked)
+                else
+                  input.form-check-input(id=id type='radio' name='gender' value=value)
+                label(for=id) #{member.gender[type][0]}
+      .form-group.d-none.modifProfile
+        label(for='avatar') Votre image de profil(jpeg ou png):
+        .custom-file
+          input#fileavatar.custom-file-input(type='file' name='filetoupload' accept='image/png, image/jpeg')
+          label.custom-file-label(for='fileavatar') Parcourir
+      legend Vos hobbies cinématographiques
+      label Genre : 
+      .infoProfile
+        .d-flex.flex-wrap.mb-3
+          - for (genderMovie in member.gendersMovie)
+            -var id=genderMovie
+            -var value=genderMovie
+            -var checked=member.gendersMovie[genderMovie][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='gendersMovie' value=value checked=checked disabled)
+                label.form-check-label(for=id) #{member.gendersMovie[genderMovie][0]}
+      div.d-none.modifProfile
+        .form-group.d-flex.flex-wrap.mb-3
+          - for (genderMovie in member.gendersMovie)
+            -var id=genderMovie
+            -var value=genderMovie
+            -var checked=member.gendersMovie[genderMovie][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='gendersMovie' value=value checked=checked)
+                label.form-check-label(for=id) #{member.gendersMovie[genderMovie][0]}
+      label Provenance : 
+      .infoProfile
+        .d-flex.flex-wrap.mb-3
+          - for (originMovie in member.originsMovie)
+            -var id=originMovie
+            -var value=originMovie
+            -var checked=member.originsMovie[originMovie][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='originsMovie' value=value checked=checked disabled)
+                label.form-check-label(for=id) #{member.originsMovie[originMovie][0]}
+      div.d-none.modifProfile
+        .form-group.d-flex.flex-wrap.mb-3
+          - for (originMovie in member.originsMovie)
+            -var id=originMovie
+            -var value=originMovie
+            -var checked=member.originsMovie[originMovie][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='originsMovie' value=value checked=checked)
+                label.form-check-label(for=id) #{member.originsMovie[originMovie][0]}
+      label Type de distribution : 
+      .infoProfile
+        .d-flex.flex-wrap.mb-3
+          - for (distribution in member.distributions)
+            -var id=distribution
+            -var value=distribution
+            -var checked=member.distributions[distribution][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='distributions' value=value checked=checked disabled)
+                label.form-check-label(for=id) #{member.distributions[distribution][0]}
+      div.d-none.modifProfile
+        .form-group.d-flex.flex-wrap.mb-3
+          - for (distribution in member.distributions)
+            -var id=distribution
+            -var value=distribution
+            -var checked=member.distributions[distribution][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='distributions' value=value checked=checked)
+                label.form-check-label(for=id) #{member.distributions[distribution][0]}
+      label Epoque : 
+      .infoProfile
+        .d-flex.flex-wrap.mb-3
+          - for (time in member.times)
+            -var id=time
+            -var value=time
+            -var checked=member.times[time][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='times' value=value checked=checked disabled)
+                label.form-check-label(for=id) #{member.times[time][0]}
+      div.d-none.modifProfile
+        .form-group.d-flex.flex-wrap.mb-3
+          - for (time in member.times)
+            -var id=time
+            -var value=time
+            -var checked=member.times[time][1]
+              .form-check
+                input.form-check-input(id=id type='checkbox' name='times' value=value checked=checked)
+                label.form-check-label(for=id) #{member.times[time][0]}
+      .infoProfile
+        label Ce que vous recherchez sur la Petite Toile : 
+        p #{member.synopsis}
+      .form-group.d-none.modifProfile
+        label(for='synopsis') Ce que vous recherchez sur la Petite Toile :
+        textarea#synopsis.form-control(name='synopsis' maxlength='2500' placeholder='2500 caractères maximum') #{member.synopsis}
+      input#modify.btn.mr-2.mb-2(type='button' value='Modifier')
+      input#modifyPwd.btn.mr-2.mb-2(type='button' value='Changer mon mot de passe' data-toggle='modal' data-target='#chPwdModal')
+      input.d-none(type='text' name='idM' value=member.idM)
+      input#validate.btn.d-none.mr-2.mb-2(type='submit' value='Valider')
+      input#cancel.btn.d-none.mr-2.mb-2(type='button' value='Annuler')
+      #chPwdModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='chPwdModalTitle' aria-hidden='true')
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              h5#chPwdModalTitle.modal-title Changer mon mot de passe
+              button.close(type='button' data-dismiss='modal' aria-label='Close')
+                span(aria-hidden='true') &times;
+            .modal-body
+              label Nouveau mot de passe : 
+              input#pwdToChange.form-control(type='password')
+              label.mt-3 Confirmer le mot de passe : 
+              input#pwdToChangeAgain.form-control.mb-2(type='password')
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Annuler
+              button.btn.btn-primary.validChangePwd(type='button') Valider
+else
+  h2 Accès non autorisé
+  p Vous devez être connecté pour accéder à votre Petite Toile
+  p
+    a(href='/') > Me connecter
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/lib/bootstrap/js/bootstrap.bundle.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/utils/forms.js')
+script(src='/js/profile.js')
+

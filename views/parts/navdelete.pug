@@ -1,0 +1,50 @@
+nav
+  ul
+    a
+      li.icon-text
+        if title==="Mes publications"
+            img(src='/img/nav/news-sel-30.png')
+            span.nav-item.selected Mes publications
+        else 
+            img(src='/img/nav/news-30.png')
+            span.nav-item Mes publications
+    a
+      li.icon-text
+        if (title =='Mon profil') 
+            img(src='/img/nav/profile-sel-30.png')
+            span.nav-item.selected Mon profil
+        else 
+            img(src='/img/nav/profile-30.png')
+            span.nav-item Mon profil
+    a
+      li.icon-text
+        if (title =='Mes amis') 
+            img(src='/img/nav/friends-sel-30.png')
+            span.nav-item.selected Mes amis
+        else 
+            img(src='/img/nav/friends-30.png')
+            span.nav-item Mes amis
+    a
+      li.icon-text
+        if (title =='Ma messagerie') 
+            img(src='/img/nav/mail-sel-30.png')
+            span.nav-item.selected Ma messagerie
+        else 
+            img(src='/img/nav/mail-30.png')
+            span.nav-item Ma messagerie
+    a
+      li.icon-text
+        if (title =='Mes discussions') 
+            img(src='/img/nav/chat-sel-30.png')
+            span.nav-item.selected Mes discussions
+        else 
+            img(src='/img/nav/chat-30.png')
+            span.nav-item Mes discussions
+    a
+      li.icon-text
+        if (title =='Tous les membres') 
+            img(src='/img/nav/search-sel-30.png')
+            span.nav-item.selected Tous les membres
+        else 
+            img(src='/img/nav/search-30.png')
+            span.nav-item Tous les membres

@@ -1,0 +1,74 @@
+header
+  .d-flex.justify-content-between.flex-nowrap
+    h1 Petite toile entre amis
+    ul.nav.flex-column.flex-sm-row.flex-nowrap
+      li.nav-item
+        if (title == 'Accueil')
+          a.nav-link.disabled Accueil
+        else
+          a.nav-link(href='/') Accueil
+      li.nav-item
+        if title === 'A propos'
+          a.nav-link.disabled A propos
+        else 
+          a.nav-link(href='about') A propos
+  if user
+    nav.d-flex.justify-content-between.justifty-content-sm-around.mt-2.mt-sm-3
+      if (title == 'Mes publications')
+        a.nav-link.disabled(href='/publications')
+          img(src='/img/nav/news-30.png')
+          span Mes publications
+      else 
+        a.nav-link(href='/publications')
+          img(src='/img/nav/news-30.png')
+          span Mes publications
+      if (title == 'Mon profil')
+        a.nav-link.disabled(href='/profil')
+          img(src='/img/nav/profile-30.png')
+          span Mon profil
+      else
+        a.nav-link(href='/profil')
+          img(src='/img/nav/profile-30.png')
+          span Mon profil
+      if (title == 'Mes amis')
+        a.nav-link.disabled(href='/amis')
+          img(src='/img/nav/friends-30.png')
+          span Mes amis
+      else 
+         a.nav-link(href='/amis')
+          img(src='/img/nav/friends-30.png')
+          span Mes amis
+      if (title == 'Mes discussions')
+        a.nav-link.disabled(href='/discussions')
+          if (chat == '0')
+            img#iconChat(src='/img/nav/chat-30.png')
+          else 
+            img#iconChat(src='/img/nav/chat-new-30.png')
+          span Mes discussions
+      else
+        a.nav-link(href='/discussions')
+          if (chat == '0')
+            img#iconChat(src='/img/nav/chat-30.png')
+          else 
+            img#iconChat(src='/img/nav/chat-new-30.png')
+          span Mes discussions
+      if (title == 'Ma messagerie')
+        a.nav-link.disabled(href='/messagerie')
+          img(src='/img/nav/mail-30.png')
+          span Ma messagerie
+      else 
+        a.nav-link(href='/messagerie')
+          img(src='/img/nav/mail-30.png')
+          span Ma messagerie
+      if (title == 'Tous les membres')
+        a.nav-link.disabled(href='#')
+          img(src='/img/nav/search-30.png')
+          span Tous les membres
+      else 
+        a.nav-link(href='/membres')
+          img(src='/img/nav/search-30.png')
+          span Tous les membres
+      a.nav-link(href='/deconnexion')
+        img(src='/img/nav/logout-30.png')
+        span Déconnexion
+

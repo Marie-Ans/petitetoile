@@ -1,0 +1,49 @@
+include parts/head.pug
+include parts/header.pug
+.container.mt-2.mt-md-5
+  .row
+    .col-12.col-md-6
+      p.display-4.pinkColor.mb-1.mb-sm-2 Actuellement sur la Petite Toile
+      ul.list-unstyled
+        li
+          span#registred.white.badge.badge-primary #{nbMembers}
+          |  membres inscrits
+        li
+          span#logged.white.badge.badge-primary #{nbSessions}
+          |  membres connectés
+        li
+          span#published.white.badge.badge-primary #{nbPublis}
+          |  publications
+    .col-12.col-md-6.mt-2
+      if user 
+        p
+          | Vous &egrave;tes deja connect&eacute; en tant que 
+          b #{userInfo.pseudo}
+        p
+          a(href='publications') > Accéder à ma petite toile
+        p
+          a(href='deconnexion') > Me déconnecter
+      else 
+        h3 Me connecter :
+        if msg
+          div(class=''+msg.class role='alert') #{msg.text}
+        form.shadow-lg.p-3.mb-2.bg-white.rounded
+          .form-group
+            label(for='userId') Pseudo : 
+            input#userId.form-control(type='text' name='userId' aria-describedby='userIdMsg')
+            small#userIdMsg.form-text.text-muted Information requise
+          .form-group
+            label(for='pwd') Mot de passe
+            input#pwd.form-control(type='password' name='pwd' aria-describedby='pwdMsg')
+            small#pwdMsg.form-text.text-muted Information requise
+          button#submit.btn Me connecter
+          p.text-right.mt-4.mb-0
+            a(href='motdepasseperdu') J'ai oublié mon mot de passe
+        p.text-center
+            a(href='inscription') Pas encore inscrit? Je crée mon compte
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/lib/bootstrap/js/bootstrap.bundle.min.js')
+script(src='/socket.io/socket.io.js')
+script(src='/js/utils/sock.js')
+script(src='/js/utils/forms.js')
+script(src='/js/home.js')

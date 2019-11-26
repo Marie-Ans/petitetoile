@@ -1,0 +1,212 @@
+include parts/head.pug
+include parts/header.pug
+if user 
+  - var admin = userInfo.admin==true?'(admin)':''
+  nav(aria-label='breadcrumb')
+    ol.breadcrumb(id=userInfo.pseudo)
+      li.breadcrumb-item.font-weight-bold.gray(id=userInfo.admin) #{userInfo.pseudo} 
+        span.adminColor.font-weight-normal #{admin}
+      li.breadcrumb-item.active(aria-current='page') Mes amis
+  h2.ml-3.mb-lg-3 Mes amis
+  if msg
+    div(class=''+msg.class role='alert') #{msg.text}
+  .page.page-friends(id=userInfo.id)
+    nav.navbar.navbar-expand-md.navbar-light.bg-light.nav-tabs
+      button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          - var nbF = nbFriends===0?'':nbFriends
+          - var nbI = nbInvits===0?'':nbInvits
+          - var nbD = nbDemands===0?'':nbDemands
+          - var nbR = nbRecoms===0?'':nbRecoms
+          if tab == 'amis'
+            li.nav-item.active
+              a.nav-link
+                | Mes amis
+                sup#nbFriends.ml-1.font-weight-bold #{nbF}
+                span.sr-only (current)
+          else 
+             li.nav-item
+                a.nav-link.pinkColor(href='/amis')
+                  | Mes amis
+                  sup#nbFriends.ml-1.font-weight-bold #{nbF}
+          if tab == 'invitations'
+            li.nav-item.active
+              a.nav-link
+                | Invitations en cours 
+                sup#nbInvits.ml-1.font-weight-bold #{nbI}
+                span.sr-only (current)
+          else 
+            li.nav-item
+              a.nav-link.pinkColor(href='/amis/invitations')
+                | Invitations en cours
+                sup#nbInvits.ml-1.font-weight-bold #{nbI}
+          if tab == 'demandes'
+            li.nav-item.active
+              a.nav-link
+                | Demandes d'ajout 
+                sup#nbDemands.font-weight-bold #{nbD}
+                span.sr-only (current)
+          else 
+            li.nav-item
+              a.nav-link.pinkColor(href='/amis/demandes')
+                | Demandes d'ajout 
+                sup#nbDemands.font-weight-bold #{nbD}
+          if tab == 'recommandations'
+            li.nav-item.active
+              a.nav-link
+                | Recommandations 
+                sup#nbRecoms.ml-1.font-weight-bold #{nbR}
+                span.sr-only (current)
+          else 
+            li.nav-item
+              a.nav-link.pinkColor(href='/amis/Recommandations')
+                | Recommandations 
+                sup#nbRecoms.ml-1.font-weight-bold #{nbR}
+    if tab == 'amis'
+      .friends
+        if friends.length
+          h3 Vos amis :
+          .membersContainer
+            each friend in friends
+              - var modalId = friend.pseudo+'Modal'
+              - var adminFriend = friend.admin==true?'(admin)':''
+              - var avatarFriend = '/img/avatars/'+friend.avatar
+              .member.shadow.rounded(id=friend.pseudo)
+                .infoMember
+                  img(src=avatarFriend alt='avatar')
+                  if friend.inline
+                    .inline.mt-1.mt-lg-2.ml-1
+                  else 
+                    .offline.mt-1.mt-lg-2.ml-1
+                  div
+                    a.pinkColor(href='/ami?p='+friend.pseudo title='Voir la Petite Toile de '+friend.pseudo)
+                      p.font-weight-bold.mr-1.mb-0 #{friend.fname} #{friend.lname}
+                    p.font-italic.mb-0 #{friend.pseudo} 
+                    p.font-italic.mb-0  #{adminFriend}
+                .metaMember
+                  .metaActions
+                    .btn-group(role='group')
+                      button#btnGroupDrop1.btn.btn-secondary.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                        | Actions
+                      .dropdown-menu(aria-labelledby='btnGroupDrop1')
+                        p.dropdown-item.seeWeb Voir la Petite Toile
+                        p.dropdown-item.recommand(data-toggle="modal" data-target='#'+modalId) Recommander à un ami
+                        p.dropdown-item.remove Supprimer de mes amis
+                  .metaInfo
+                    p Depuis le #{friend.formatDate} 
+                  .modal.fade(id=modalId tabindex='-1' role='dialog' aria-labelledby='recomModalTitle' aria-hidden='true')
+                    .modal-dialog.modal-dialog-scrollable(role='document')
+                      .modal-content
+                        .modal-header
+                          h5#recomModalTitle.modal-title Recommander un ami
+                          button.close(type='button' data-dismiss='modal' aria-label='Close')
+                            span(aria-hidden='true') &times;
+                        .modal-body
+                          label.mr-1 Recommander  #{friend.pseudo} à :
+                          select(name=friend.pseudo)
+                            option(value='') -- Choisir un ami --
+                        .modal-footer
+                          button.btn(type='button' data-dismiss='modal') Annuler
+                          button.recomBtn.btn(type='button' data-dismiss='modal') Recommander
+        else 
+          h3 Vous n'avez pas encore d'amis
+    if tab == 'invitations'
+      .friends
+        if invits.length
+          h3 Vous avez invité :
+          .membersContainer
+            each invit in invits
+              - var adminInvit = invit.guest.admin==true?'(admin)':''
+              - var avatarInvit = '/img/avatars/'+invit.guest.avatar
+              .member.shadow.rounded(id=invit.guest.pseudo)
+                .infoMember
+                  img(src=avatarInvit alt='avatar')
+                  div.ml-1 
+                    p.font-weight-bold.mr-1.mb-0 #{invit.guest.fname} #{invit.guest.lname} 
+                    p.font-italic.mb-0 #{invit.guest.pseudo} 
+                    p.font-italic.mb-0 #{adminInvit} 
+                .metaMember
+                  .metaInfo
+                    p Le #{invit.formatDate} 
+        else 
+          h3 Aucune invitation pour le moment
+    if tab == 'demandes'
+      .friends
+        if demands.length
+          h3 Vous avez été invité par :
+          .membersContainer
+            each demand in demands
+              - var adminDemand = demand.host.admin==true?'(admin)':''
+              - var avatarDemand = '/img/avatars/'+demand.host.avatar
+              .member.shadow.rounded(id=demand.host.id)
+                .infoMember
+                  img(src=avatarDemand alt='avatar')
+                  div.ml-1 
+                    p.font-weight-bold.mr-1.mb-0 
+                      span #{demand.host.fname}
+                      span 
+                      span #{demand.host.lname}
+                    p.font-italic.mb-0 #{demand.host.pseudo} 
+                    p.font-italic.mb-0 #{adminDemand} 
+                .metaMember
+                  .metaInfo
+                    p Le #{demand.formatDate} 
+                  .metaActions
+                    button.btn.btn-img.refuseDemand.cancel(type='button' data-toggle='tooltip' data-placement='top' title='Refuser la demande')
+                    button.btn.btn-img.acceptDemand.validate(type='button' data-toggle='tooltip' data-placement='top' title='Ajouter à mes amis')
+        else 
+          h3 Aucune demande pour le moment
+    if tab == 'recommandations'
+      .friends
+        if recommandations.length
+          h3 Vous avez des recommandations :
+          .membersContainer
+            each recommandation in recommandations
+              - var adminRecommanded = recommandation.recommandedMember.admin==true?'(admin)':''
+              - var avatarRecommanded = '/img/avatars/'+recommandation.recommandedMember.avatar
+              - var adminAdviser = recommandation.adviserMember[0].admin==true?'(admin)':''
+              .member.shadow.rounded(id=recommandation.recommandedMember._id)
+                .infoMember
+                  img(src=avatarRecommanded alt='avatar')
+                  div.ml-1 
+                    p.font-weight-bold.mr-1.mb-0 
+                      span #{recommandation.recommandedMember.fname}
+                      span 
+                      span #{recommandation.recommandedMember.lname}
+                    p.font-italic.mb-0 #{recommandation.recommandedMember.pseudo} 
+                    p.font-italic.mb-0 #{adminRecommanded} 
+                .metaMember
+                  .metaInfo
+                    p Le #{recommandation.formatDate}
+                    if recommandation.adviserMember.length == 1 
+                      p Par #{recommandation.adviserMember[0].pseudo} #{adminAdviser} 
+                    else
+                      - let tooltipTitle = ''
+                      - let i = 1
+                        each adviser in recommandation.adviserMember
+                          if i == recommandation.adviserMember.length
+                            - tooltipTitle = tooltipTitle+adviser.pseudo
+                          else
+                            - tooltipTitle = tooltipTitle+adviser.pseudo+', '
+                            - i = i+1
+                      p.pointer(data-toggle="tooltip" data-placement="bottom" title=tooltipTitle) Par plusieurs amis(...)
+                  .metaActions
+                    button.btn.btn-img.refuseRecommandation.cancel(type='button' data-toggle='tooltip' data-placement='top' title='Ignorer la recommandation')
+                    button.btn.btn-img.acceptRecommandation.validate(type='button' data-toggle='tooltip' data-placement='top' title='Ajouter à mes amis')
+        else 
+          h3 Aucune recommandation pour le moment
+        
+else
+  div.ml-2
+    h2 Accès non autorisé
+    p Vous devez être connecté pour accéder à votre Petite Toile
+    p
+      a(href='/') > Me connecter
+script(src='/socket.io/socket.io.js')
+script(src='/lib/jquery-3.4.1.min.js')
+script(src='/lib/bootstrap/js/bootstrap.bundle.min.js')
+script(src='/js/utils/sock.js')
+script(src='/js/friends.js')
+
