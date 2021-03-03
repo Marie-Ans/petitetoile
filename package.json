@@ -18,7 +18,7 @@
     "nodemailer": "^6.3.0",
     "password-hash": "^1.2.2",
     "path": "^0.12.7",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "socket.io": "^2.2.0"
   }
 }
